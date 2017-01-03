@@ -36,13 +36,13 @@ class DLinkedList{
         Node* getFrontNode() const {return head;}      //  get first element
         Node* getLastNode() const {return trailer;}    //  get last element
 
-        void removeNode(Node* nodeToRemove);
+        //void removeNode(Node* nodeToRemove);
         //void removeFromFront();                     //  remove from front
-        void removeFromBack();                      //  remove from back
+        //void removeFromBack();                      //  remove from back
 
-        void insertBefore(Node* addNodeBefore, const Elem e);
+        //void insertBefore(Node* addNodeBefore, const Elem e);
         void addAtFront(const Elem e);                          // add at front
-        void addAtBack(const Elem e);                           // add at back
+        //void addAtBack(const Elem e);                           // add at back
 
         Node* getNodeAt(const int position);
 };
@@ -60,16 +60,22 @@ DLinkedList :: ~DLinkedList(){
 }
 
 bool DLinkedList :: isEmpty() const{
+    cout << "here2" <<endl;
     return (!head || !trailer);
 }
 
 void DLinkedList :: print(){
-    Node* tmp = head;
+    Node *tmp = head;
     if(!isEmpty()){
         do{
             cout << tmp->getData() << " --> ";
             tmp = tmp->getNext();
-        }while(tmp != NULL);
+        }while(tmp != head);
+        cout << endl << "|";
+        for(int i = 0; i < length; i++){
+            cout << "______";
+        }
+        cout << "|" << endl;
     }else
         cout << "EMPTY" << endl;
     cout << endl;
@@ -79,10 +85,11 @@ bool DLinkedList :: insert(Elem data, int position){
     Node* newNode = new Node();
     newNode->setData(data);
     newNode->setNext(NULL);
-    if(position > (length + 1)){
-        cout << "Error: The given position is out of range";
-        return false;
-    }
+    cout << "l : " << getLength() << ", p : " << position << endl;
+    assert(position <= (length));//{
+    //     cout << "Error: The given position is out of range";
+    //     return false;
+    // }
     if((position == 0) || (head == NULL)){
         newNode->setNext(head);
         head = newNode;
@@ -125,6 +132,8 @@ bool DLinkedList :: remove(int position){
                 tempOld->setNext(tempNew->getNext());
                 length--;
                 delete tempNew;
+                if(count == length)
+                    trailer = tempOld;
                 return true;
             }
             tempOld = tempNew;
@@ -167,19 +176,19 @@ Node* DLinkedList :: getNodeAt(const int position){
 }
 
 // Add Node before a node
-void DLinkedList :: insertBefore(Node* previousNode, const Elem e){
-    Node* newNode = new Node();
-    newNode->setNext(NULL);
-    newNode->setData(e);
-    // will be used for insertAfter
-    // if(previousNode == trailer){
-    //     trailer = newNode;
-    // }
-    newNode->setNext(previousNode);
-    //newNode->setPrev(previousNode->getPrev());
-    //previousNode->getPrev()->setNext(newNode);
-    //previousNode->setPrev(newNode);
-}
+// void DLinkedList :: insertBefore(Node* previousNode, const Elem e){
+//     Node* newNode = new Node();
+//     newNode->setNext(NULL);
+//     newNode->setData(e);
+//     // will be used for insertAfter
+//     // if(previousNode == trailer){
+//     //     trailer = newNode;
+//     // }
+//     newNode->setNext(previousNode);
+//     //newNode->setPrev(previousNode->getPrev());
+//     //previousNode->getPrev()->setNext(newNode);
+//     //previousNode->setPrev(newNode);
+// }
 
 
 // Add to front of list
@@ -187,18 +196,17 @@ void DLinkedList :: insertBefore(Node* previousNode, const Elem e){
 void DLinkedList :: addAtFront(const Elem data){
     Node* newNode = new Node();
     newNode->setData(data);
-    newNode->setNext(NULL);
-    //newNode->setPrev(NULL);
+    newNode->setNext(head);
     if(head == NULL){
         head = newNode;
         trailer = newNode;
         length++;
-        cout << "here" << endl;
         return;
     }
     length++;
-    newNode->setNext(head);
+    //newNode->setNext(head);
     head = newNode;
+    trailer->setNext(head);
 }
 
 
@@ -213,17 +221,18 @@ void DLinkedList :: push_back(Elem data){
         head = newNode;
         trailer = newNode;
         length++;
-        cout <<"here" << endl;
+        newNode->setNext(head);
         return;
     }
     Node* temp = head;
-    while(temp->getNext()!= NULL){
+    while(temp->getNext()!= head){
         temp = temp->getNext();
     }
     length++;
     temp->setNext(newNode);
     //newNode->setPrev(temp);
     trailer = newNode;
+    newNode->setNext(head);
 }
 
 int main(){
@@ -231,16 +240,18 @@ int main(){
     //list.addAtFront(1);
     list->push_back(3);
     list->push_back(4);
-    list->addAtFront(9);
+    //list->addAtFront(9);
     list->push_back(5);
-    //list.insert(12,1);
-    //list.insert(2,2);
+    list->push_back(19);
+    list->push_back(9);
+    list->insert(12,1);
+    list->insert(23,6);
     list->print();
-    list->remove(2);
+    list->remove(6);
     list->print();
-
-    cout << "value of node at 3rd position : " << list->getNodeAt(2)->getData() << endl;
-    list->insertBefore(list->getNodeAt(2),12);
+    list->addAtFront(15);
     list->print();
+    cout << "trailer : " << list->getLastNode()->getData() << endl;
+    cout << "trailer->next : " << list->getLastNode()->getNext()->getData() << endl;
     return -1;
 }
