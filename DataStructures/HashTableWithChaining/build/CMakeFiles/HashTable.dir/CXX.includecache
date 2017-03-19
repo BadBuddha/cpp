@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/HashEntry.h
+iostream
+-
+
+../include/HashMap.h
+iostream
+-
+HashEntry.h
+../include/HashEntry.h
+
+/code/mygit/cpp/DataStructures/HashTable/src/HashTable.cpp
+iostream
+-
+HashEntry.h
+/code/mygit/cpp/DataStructures/HashTable/src/HashEntry.h
+HashMap.h
+/code/mygit/cpp/DataStructures/HashTable/src/HashMap.h
+
